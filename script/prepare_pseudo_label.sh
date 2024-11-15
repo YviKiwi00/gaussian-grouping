@@ -7,25 +7,24 @@ if [ "$#" -ne 2 ]; then
     exit 1
 fi
 
+cd grouping
 
 dataset_name="$1"
 scale="$2"
-dataset_folder="data/$dataset_name"
+dataset_folder="../data/$dataset_name"
 
 if [ ! -d "$dataset_folder" ]; then
     echo "Error: Folder '$dataset_folder' does not exist."
     exit 2
 fi
 
-
-
 # 1. DEVA anything mask
 cd Tracking-Anything-with-DEVA/
 
 if [ "$scale" = "1" ]; then
-    img_path="../data/${dataset_name}/images"
+    img_path="../${dataset_folder}/images"
 else
-    img_path="../data/${dataset_name}/images_${scale}"
+    img_path="../${dataset_folder}/images_${scale}"
 fi
 
 # colored mask for visualization check
@@ -53,7 +52,7 @@ python demo/demo_automatic.py \
   --use_short_id  \
   --suppress_small_objects  \
   --SAM_PRED_IOU_THRESHOLD 0.7 \
-  
+
 # 2. copy gray mask to the correponding data path
-cp -r ./example/output_gaussian_dataset/${dataset_name}/Annotations ../data/${dataset_name}/object_mask
+cp -r ./example/output_gaussian_dataset/${dataset_name}/Annotations ../${dataset_folder}/object_mask
 cd ..
